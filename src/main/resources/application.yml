@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: JWTAuthentication
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/guitar_db
+    username: postgres
+    password: root
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
