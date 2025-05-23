@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог гитар | Guitar Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Futura&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .logo {
+            height: 60px;
+        }
+        .navbar{
+            font-family: "Pacifico", cursive;
+        }
+        .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            margin: 0 10px;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #3a4149;
+        }
+
+        .dropdown-item:active {
+            background-color: #e9ecef;
+        }
+
+        .dropdown-divider {
+            margin: 0.25rem 0;
+        }
+
+        .nav-link.dropdown-toggle {
+            cursor: pointer;
+        }
+
+        .nav-link.dropdown-toggle::after {
+            transition: transform 0.2s ease;
+        }
+
+        .fa-user-circle {
+            font-size: 1.5em;
+        }
+
+        .col-md-4 {
+            padding: 0 12px;
+            margin-bottom: 24px;
+        }
+
+        .row {
+            margin: 0 -12px;
+        }
+
+        .catalog-container {
+            padding: 2rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .catalog-container h1 {
+             font-family: 'Futura', sans-serif;
+             font-weight: 600;
+             color: #2d3748;
+             margin-bottom: 1.5rem;
+             position: relative;
+             display: inline-block;
+         }
+
+        .catalog-container h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #4a5568;
+        }
+
+        .guitar-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .guitar-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .guitar-img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .guitar-card:hover .guitar-img {
+            transform: scale(1.03);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-type {
+            background: #e2e8f0;
+            color: #4a5568;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            align-self: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .btn-outline-dark {
+            border: 2px solid #4a5568;
+            color: #4a5568;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+
+        .btn-outline-dark:hover {
+            background: #4a5568;
+            color: white;
+        }
+
+        .badge-type {
+            background: #6c757d;
+            color: white;
+        }
+
+        .pagination {
+            margin-top: 3rem;
+        }
+
+        .page-item.active .page-link {
+            background-color: #4a5568;
+            border-color: #4a5568;
+        }
+
+        .page-link {
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+        }
+
+        .page-link:hover {
+            background-color: #f7fafc;
+            color: #2d3748;
+        }
+
+        #filterToggle {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #filterToggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1050;
+            transition: right 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .filter-sidebar.show {
+            right: 0;
+        }
+
+        .filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+            display: none;
+        }
+
+        .filter-overlay.show {
+            display: block;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group-content {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .filter-group.active .filter-group-content {
+            display: block;
+        }
+
+        .filter-option {
+            margin-bottom: 8px;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-option input {
+            margin-right: 10px;
+        }
+
+        .selected-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .selected-filter {
+            background: #edf2f7;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4a5568;
+        }
+
+        .selected-filter i {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .selected-filter i:hover {
+            color: #e53e3e;
+        }
+
+        #resetAllFilters {
+            color: #e53e3e;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .apply-filters {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        footer {
+            background: #2b2d30;
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #e2e8f0;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #cbd5e0;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ffffff;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .catalog-container {
+                padding: 1.5rem 15px;
+            }
+
+            .guitar-img {
+                height: 180px;
+            }
+
+            .card-body {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span class="handwritten">Guitar</span>
+            <img class="logo ms-2" th:src="@{img/logo2.png}" alt="Логотип">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" th:href ="@{/catalog}">Каталог</a>
+                <a class="nav-link" th:href ="@{/catalog}">Артисты</a>
+            </div>
+
+            <div class="navbar-nav ms-auto">
+                <div th:unless="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
+                        <li><a class="dropdown-item" th:href="@{/login}">Войти</a></li>
+                        <li><a class="dropdown-item" th:href="@{/register}">Регистрация</a></li>
+                    </ul>
+                </div>
+
+                <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown">
+                    <div class="navbar-nav ms-auto">
+                        <div th:unless="${#authentication.principal}">
+                            <a class="nav-link" th:href="@{/login}">Войти</a>
+                            <a class="nav-link" th:href="@{/register}">Регистрация</a>
+                        </div>
+
+                        <div th:if="${#authentication.principal}" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <span th:text="${#authentication.principal.username}"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <a class="dropdown-item" th:href="@{/profile}">
+                                        <i class="fas fa-user me-2"></i> Профиль
+                                    </a>
+                                </li>
+                                <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                                    <a class="dropdown-item" th:href="@{/admin}">
+                                        <i class="fas fa-cog me-2"></i> Администрирование
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form th:action="@{/logout}" method="post">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Выйти
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container catalog-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Каталог гитар</h1>
+        <button id="filterToggle" class="btn btn-dark">
+            <i class="fas fa-filter me-2"></i>Фильтры
+            <span id="activeFiltersCount" class="badge bg-danger ms-2" style="display: none;">0</span>
+        </button>
+    </div>
+
+    <div id="selectedFilters" class="selected-filters mb-3"></div>
+
+    <div id="guitarsContainer">
+        <div class="row">
+            <div th:each="guitar : ${guitars.content}" class="col-md-4">
+                <div class="card guitar-card">
+                    <img th:src="${guitar.imageUrl ?: 'https://via.placeholder.com/300x200?text=Guitar'}"
+                         class="card-img-top guitar-img" alt="Гитара">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${guitar.name}"></h5>
+                        <span class="badge badge-type mb-2" th:text="${guitar.type.description}"></span>
+                        <p class="card-text" th:text="${#strings.abbreviate(guitar.description, 100)}"></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a th:href="@{/guitars/{id}(id=${guitar.id})}" class="btn btn-outline-dark">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+
+    <div th:if="${guitars.totalPages > 1}" class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${guitars.first} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{'/catalog' + ${#strings.isEmpty(currentTypes) ? '' : '?type=' + currentTypes} + ${#strings.isEmpty(currentBrands) ? '' : '&brand=' + currentBrands} + '&page=' + ${guitars.number-1} + '&size=' + ${guitars.size}}">
+                        &laquo;
+                    </a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, guitars.totalPages)}"
+                    class="page-item" th:classappend="${i-1 == guitars.number} ? 'active' : ''">
+                    <a class="page-link" th:href="@{'/catalog' + ${#strings.isEmpty(currentTypes) ? '' : '?type=' + currentTypes} + ${#strings.isEmpty(currentBrands) ? '' : '&brand=' + currentBrands} + '&page=' + ${i-1} + '&size=' + ${guitars.size}}"
+                       th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${guitars.last} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{'/catalog' + ${#strings.isEmpty(currentTypes) ? '' : '?type=' + currentTypes} + ${#strings.isEmpty(currentBrands) ? '' : '&brand=' + currentBrands} + '&page=' + ${guitars.number+1} + '&size=' + ${guitars.size}}">
+                        &raquo;
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="filter-overlay" id="filterOverlay"></div>
+<div class="filter-sidebar" id="filterSidebar">
+    <div class="filter-header">
+        <h4>Фильтры</h4>
+        <button class="close-sidebar" id="closeSidebar">&times;</button>
+    </div>
+
+    <form id="filterForm">
+        <input type="hidden" name="page" value="0">
+
+        <div class="filter-group active">
+            <div class="filter-group-title">
+                <span>Тип гитары</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="filter-group-content">
+                <div th:each="type : ${types}" class="filter-option">
+                    <label>
+                        <input type="checkbox" name="type" th:value="${type}"
+                               th:checked="${currentTypes != null && #lists.contains(currentTypes, type)}">
+                        <span th:text="${type}"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-group active">
+            <div class="filter-group-title">
+                <span>Бренд</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="filter-group-content">
+                <div th:each="brand : ${brands}" class="filter-option">
+                    <label>
+                        <input type="checkbox" name="brand" th:value="${brand}"
+                               th:checked="${currentBrands != null && #lists.contains(currentBrands, brand)}">
+                        <span th:text="${brand}"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" id="applyFilters" class="btn btn-dark apply-filters">Применить</button>
+    </form>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>О нас</h3>
+            <p>Guitar Guru - это сообщество гитаристов, где вы можете найти идеальный инструмент и полезные статьи.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <a href="mailto:info@guitarguru.com">info@guitarguru.com</a>
+            <p>+1 (234) 567-890</p>
+            <p>Гродно, ул. Гитаристов, 7</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Быстрые ссылки</h3>
+            <a href="/catalog">Каталог гитар</a>
+
+            <a href="/login">Вход/Регистрация</a>
+        </div>
+
+        <div class="footer-section">
+            <h3>Соцсети</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        &copy; 2023 Guitar Guru.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#filterToggle').click(function() {
+            $('#filterSidebar').addClass('show');
+            $('#filterOverlay').addClass('show');
+        });
+
+        $('#closeSidebar, #filterOverlay').click(function() {
+            $('#filterSidebar').removeClass('show');
+            $('#filterOverlay').removeClass('show');
+        });
+
+        // Раскрытие/скрытие групп фильтров
+        $('.filter-group-title').click(function() {
+            const parent = $(this).parent();
+            parent.toggleClass('active');
+            const icon = $(this).find('i');
+            if (parent.hasClass('active')) {
+                icon.removeClass('fa-chevron-right').addClass('fa-chevron-down');
+            } else {
+                icon.removeClass('fa-chevron-down').addClass('fa-chevron-right');
+            }
+        });
+
+        function updateActiveFiltersCount() {
+            const activeCount = $('input[name="type"]:checked').length + $('input[name="brand"]:checked').length;
+            const countBadge = $('#activeFiltersCount');
+
+            if (activeCount > 0) {
+                countBadge.text(activeCount).show();
+            } else {
+                countBadge.hide();
+            }
+        }
+
+        updateActiveFiltersCount();
+
+        $('input[name="type"], input[name="brand"]').change(function() {
+            updateActiveFiltersCount();
+        });
+
+        function updateSelectedFilters() {
+            const selectedFilters = $('#selectedFilters');
+            selectedFilters.empty();
+
+            $('input[name="type"]:checked').each(function() {
+                const value = $(this).val();
+                selectedFilters.append(`
+                    <div class="selected-filter">
+                        Тип: ${value}
+                        <i class="fas fa-times remove-filter" data-filter="type" data-value="${value}"></i>
+                    </div>
+                `);
+            });
+
+            $('input[name="brand"]:checked').each(function() {
+                const value = $(this).val();
+                selectedFilters.append(`
+                    <div class="selected-filter">
+                        Бренд: ${value}
+                        <i class="fas fa-times remove-filter" data-filter="brand" data-value="${value}"></i>
+                    </div>
+                `);
+            });
+
+            if ($('input[name="type"]:checked, input[name="brand"]:checked').length > 0) {
+                selectedFilters.append(`
+                    <div class="selected-filter">
+                        <a href="#" id="resetAllFilters" class="text-danger">Сбросить все</a>
+                    </div>
+                `);
+            }
+
+            $('.remove-filter').click(function() {
+                const filterName = $(this).data('filter');
+                const value = $(this).data('value');
+                $(`input[name="${filterName}"][value="${value}"]`).prop('checked', false);
+                updateSelectedFilters();
+                updateActiveFiltersCount();
+                loadGuitars();
+            });
+
+            $('#resetAllFilters').click(function(e) {
+                e.preventDefault();
+                $('input[name="type"], input[name="brand"]').prop('checked', false);
+                updateSelectedFilters();
+                updateActiveFiltersCount();
+                loadGuitars();
+            });
+        }
+
+        updateSelectedFilters();
+
+        function loadGuitars() {
+            const loadingSpinner = $('#loadingSpinner');
+            const guitarsContainer = $('#guitarsContainer');
+
+            loadingSpinner.show();
+            guitarsContainer.hide();
+
+            const types = [];
+            $('input[name="type"]:checked').each(function() {
+                types.push($(this).val());
+            });
+
+            const brands = [];
+            $('input[name="brand"]:checked').each(function() {
+                brands.push($(this).val());
+            });
+
+            let url = '/catalog/filter?';
+            if (types.length > 0) {
+                url += 'types=' + types.join(',') + '&';
+            }
+            if (brands.length > 0) {
+                url += 'brands=' + brands.join(',') + '&';
+            }
+            url += 'page=0';
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    guitarsContainer.html(data);
+                    loadingSpinner.hide();
+                    guitarsContainer.fadeIn();
+
+                    updateSelectedFilters();
+                    updateActiveFiltersCount();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Ошибка AJAX:", status, error);
+                    loadingSpinner.hide();
+                    guitarsContainer.html('<div class="alert alert-danger">Ошибка загрузки данных. Проверьте консоль.</div>').fadeIn();
+                }
+            });
+        }
+
+        $('#applyFilters').click(function() {
+            loadGuitars();
+            $('#filterSidebar').removeClass('show');
+            $('#filterOverlay').removeClass('show');
+        });
+    });
+</script>
+</body>
+</html>

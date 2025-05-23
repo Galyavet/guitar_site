@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Guitar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>Добавить новую гитару</h1>
+    <form th:action="@{/admin/guitars/add}" th:object="${guitar}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Имя</label>
+            <input type="text" class="form-control" th:field="*{name}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Бренд</label>
+            <input type="text" class="form-control" th:field="*{brand}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Модель</label>
+            <input type="text" class="form-control" th:field="*{model}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Тип гитары</label>
+            <select class="form-select" name="typeId" required>
+                <option th:each="type : ${guitarTypes}"
+                        th:value="${type.id}"
+                        th:text="${type.description}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea class="form-control" th:field="*{description}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Материал корпуса</label>
+            <input type="text" class="form-control" th:field="*{bodyMaterial}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Цвет</label>
+            <input type="text" class="form-control" th:field="*{color}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Материал накладки</label>
+            <input type="text" class="form-control" th:field="*{fingerboardMaterial}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Количество ладов</label>
+            <input type="text" class="form-control" th:field="*{frets}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Мензура</label>
+            <input type="text" class="form-control" th:field="*{scaleLength}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Страна производства</label>
+            <input type="text" class="form-control" th:field="*{country}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Фотография гитары</label>
+            <input type="file" class="form-control" name="imageFile" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a th:href="@{/admin/guitars}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+</body>
+</html>

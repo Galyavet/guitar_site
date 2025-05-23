@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Аккаунт - Гитара</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pacifico', cursive;
+            font-weight: 450;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            margin: 0 10px;
+        }
+
+        .navbar {
+            padding: 0.5rem 1rem;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #566377;
+        }
+
+        .dropdown-item:active {
+            background-color: #e9ecef;
+        }
+
+        .dropdown-divider {
+            margin: 0.25rem 0;
+        }
+
+        .nav-link.dropdown-toggle {
+            cursor: pointer;
+        }
+
+        .fa-user-circle {
+            font-size: 1.2em;
+        }
+
+        .profile-container {
+            display: flex;
+            min-height: calc(100vh - 120px);
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        .settings-sidebar {
+            width: 250px;
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .settings-content {
+            flex: 1;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .settings-nav-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            font-weight: 450;
+        }
+
+        .settings-nav-item:hover, .settings-nav-item.active {
+            background-color: #dee2e6;
+            color: #3e4e60;
+        }
+
+        .form-section {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 450;
+        }
+
+        .settings-group {
+            margin-bottom: 30px;
+        }
+
+        .settings-group h6 {
+            color: #6c757d;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ced4da;
+            margin-bottom: 15px;
+            font-weight: 450;
+        }
+
+        .password-strength {
+            height: 5px;
+            background-color: #e9ecef;
+            margin-top: 5px;
+            border-radius: 3px;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s;
+            border-radius: 3px;
+        }
+
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 40px 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+            font-weight: 450;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #bbb;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 450;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            margin-top: 20px;
+            color: #bbb;
+            font-weight: 450;
+        }
+
+        .btn-primary {
+            background-color: #212529;
+            border-color: #212529;
+            font-weight: 450;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span class="handwritten">Guitar</span>
+            <img class="logo ms-2" th:src="@{img/logo2.png}" alt="Логотип">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" th:href="@{/catalog}">Каталог</a>
+
+            </div>
+
+            <div class="navbar-nav ms-auto">
+                <div th:unless="${#authentication.principal}">
+                    <a class="nav-link" th:href="@{/login}">Войти</a>
+                    <a class="nav-link" th:href="@{/register}">Регистрация</a>
+                </div>
+
+                <div th:if="${#authentication.principal}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span th:text="${#authentication.principal.username}"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/profile}">
+                                <i class="fas fa-user me-2"></i> Профиль
+                            </a>
+                        </li>
+                        <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                            <a class="dropdown-item" th:href="@{/admin}">
+                                <i class="fas fa-cog me-2"></i> Администрирование
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Выйти
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container profile-container">
+    <div class="settings-sidebar">
+        <h4 class="mb-4 section-title">Настройки</h4>
+
+        <div class="settings-group">
+            <h6>Профиль</h6>
+            <div class="settings-nav-item active" data-section="profile-info">
+                <i class="fas fa-user-circle me-2"></i> Информация
+            </div>
+            <div class="settings-nav-item" data-section="change-password">
+                <i class="fas fa-key me-2"></i> Сменить пароль
+            </div>
+            <h6>Избранное</h6>
+            <div class="settings-nav-item" data-section="favorites">
+                <i class="fas fa-heart me-2"></i> Мои гитары
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-content">
+        <div id="profile-info" class="settings-section active">
+            <h3 class="section-title">Информация профиля</h3>
+            <form th:action="@{/profile/update}" th:object="${user}" method="post" class="form-section">
+                <div class="mb-4">
+                    <label for="username" class="form-label">Имя пользователя</label>
+                    <input type="text" class="form-control" id="username" th:field="*{username}">
+                </div>
+
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </form>
+        </div>
+
+        <div id="change-password" class="settings-section">
+            <h3 class="section-title">Смена пароля</h3>
+            <form th:action="@{/profile/change-password}" method="post" class="form-section">
+                <div class="mb-4">
+                    <label for="currentPassword" class="form-label">Текущий пароль</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="newPassword" class="form-label">Новый пароль</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required
+                           oninput="checkPasswordStrength(this.value)">
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <div class="form-text">Пароль должен содержать минимум 8 символов</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="confirmPassword" class="form-label">Подтвердите новый пароль</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                           oninput="checkPasswordMatch()">
+                    <div id="password-match" class="form-text"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="change-password-btn">Сменить пароль</button>
+            </form>
+        </div>
+
+        <div id="favorites" class="settings-section">
+            <h3 class="section-title">Мои избранные гитары</h3>
+
+            <div th:if="${#lists.isEmpty(user.favoriteGuitars)}" class="alert alert-info">
+                У вас пока нет избранных гитар.
+            </div>
+
+            <div class="row">
+                <div th:each="guitar : ${user.favoriteGuitars}" class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img th:src="@{/} + ${guitar.imageUrl}" class="card-img-top" alt="Гитара">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${guitar.brand + ' ' + guitar.name}"></h5>
+                            <p class="card-text" th:text="${guitar.type.description}"></p>
+                            <a th:href="@{/guitars/{id}(id=${guitar.id})}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>О нас</h3>
+            <p>Guitar Guru - это сообщество гитаристов, где вы можете найти идеальный инструмент и полезные статьи.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <a href="mailto:info@guitarguru.com">info@guitarguru.com</a>
+            <p>+1 (234) 567-890</p>
+            <p>Гродно, ул. Гитаристов, 7</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Быстрые ссылки</h3>
+            <a href="/catalog">Каталог гитар</a>
+
+            <a href="/login">Вход/Регистрация</a>
+        </div>
+
+        <div class="footer-section">
+            <h3>Соцсети</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        &copy; 2023 Guitar Guru.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.settings-nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.settings-nav-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const sectionId = this.getAttribute('data-section');
+            document.getElementById(sectionId).classList.add('active');
+        });
+    });
+
+    function checkPasswordStrength(password) {
+        const strengthBar = document.getElementById('password-strength-bar');
+        let strength = 0;
+
+        if (password.length >= 8) strength += 1;
+        if (password.match(/[a-z]/)) strength += 1;
+        if (password.match(/[A-Z]/)) strength += 1;
+        if (password.match(/[0-9]/)) strength += 1;
+        if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+        const colors = ['#dc3545', '#ffc107', '#17a2b8', '#28a745', '#218838'];
+        const width = (strength / 5) * 100;
+
+        strengthBar.style.width = width + '%';
+        strengthBar.style.backgroundColor = colors[strength - 1];
+    }
+
+    function checkPasswordMatch() {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const matchText = document.getElementById('password-match');
+        const changeBtn = document.getElementById('change-password-btn');
+
+        if (confirmPassword === '') {
+            matchText.textContent = '';
+            changeBtn.disabled = true;
+            return;
+        }
+
+        if (newPassword === confirmPassword) {
+            matchText.innerHTML = '<i class="fas fa-check-circle text-success"></i> Пароли совпадают';
+            changeBtn.disabled = false;
+        } else {
+            matchText.innerHTML = '<i class="fas fa-times-circle text-danger"></i> Пароли не совпадают';
+            changeBtn.disabled = true;
+        }
+    }
+</script>
+</body>
+</html>

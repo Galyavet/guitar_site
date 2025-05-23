@@ -1,0 +1,5 @@
+ALTER TABLE guitars
+    ADD brand VARCHAR(255);
+
+ALTER TABLE guitars
+    ALTER COLUMN brand SET NOT NULL;

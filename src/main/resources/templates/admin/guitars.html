@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Guitars</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sortable:hover {
+            cursor: pointer;
+            background-color: #f8f9fa;
+        }
+        .sort-icon {
+            margin-left: 5px;
+        }
+        .block{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-secondary, .btn-dark{
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>Управление гитарами</h1>
+    <a href="/admin/guitars/add" class="btn btn-success mb-3">Добавить новую гитару</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="sortable" onclick="sortTable(0)">
+                ID
+                <span id="sortIcon0" class="sort-icon">
+                    <span th:if="${sortField == 'id' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'id' and sortDir == 'desc'}">↓</span>
+                </span>
+            </th>
+            <th class="sortable" onclick="sortTable(1)">
+                Brand
+                <span id="sortIcon1" class="sort-icon">
+                    <span th:if="${sortField == 'brand' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'brand' and sortDir == 'desc'}">↓</span>
+                </span>
+            </th>
+            <th class="sortable" onclick="sortTable(2)">
+                Model
+                <span id="sortIcon2" class="sort-icon">
+                    <span th:if="${sortField == 'model' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'model' and sortDir == 'desc'}">↓</span>
+                </span>
+            </th>
+            <th class="sortable" onclick="sortTable(3)">
+                Type
+                <span id="sortIcon3" class="sort-icon">
+                    <span th:if="${sortField == 'type' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'type' and sortDir == 'desc'}">↓</span>
+                </span>
+            </th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="guitar : ${guitars}">
+            <td th:text="${guitar.id}"></td>
+            <td th:text="${guitar.brand}"></td>
+            <td th:text="${guitar.model}"></td>
+            <td th:text="${guitar.type.name}"></td>
+            <td>
+                <a th:href="@{/admin/guitars/edit/{id}(id=${guitar.id})}"
+                   class="btn btn-sm btn-primary">Редактировать</a>
+                <a th:href="@{/admin/guitars/delete/{id}(id=${guitar.id})}"
+                   class="btn btn-sm btn-danger">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="block">
+        <a href="/admin" class="btn btn-dark">Назад</a>
+        <a href="/" class="btn btn-secondary">На главную</a>
+    </div>
+
+</div>
+
+<script>
+    function sortTable(columnIndex) {
+        let sortField;
+        let currentSortDir = '[[${sortDir}]]';
+        let currentSortField = '[[${sortField}]]';
+
+        switch(columnIndex) {
+            case 0: sortField = 'id'; break;
+            case 1: sortField = 'brand'; break;
+            case 2: sortField = 'model'; break;
+            case 3: sortField = 'type'; break;
+            default: sortField = 'id';
+        }
+
+        let newSortDir = 'asc';
+        if (currentSortField === sortField) {
+            newSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+        }
+
+        window.location.href = `[[@{/admin/guitars}]]?sortField=${sortField}&sortDir=${newSortDir}`;
+    }
+</script>
+</body>
+</html>

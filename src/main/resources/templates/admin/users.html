@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .sortable:hover {
+      cursor: pointer;
+      background-color: #f8f9fa;
+    }
+    .sort-icon {
+      margin-left: 5px;
+    }
+    .block{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-secondary, .btn-dark{
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-4">
+  <h1>Управление пользователями</h1>
+  <a href="/admin/users/add" class="btn btn-success mb-3">Добавить нового пользователя</a>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th class="sortable" onclick="sortTable(0)">
+        ID
+        <span id="sortIcon0" class="sort-icon">
+                    <span th:if="${sortField == 'id' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'id' and sortDir == 'desc'}">↓</span>
+                </span>
+      </th>
+      <th class="sortable" onclick="sortTable(1)">
+        Username
+        <span id="sortIcon1" class="sort-icon">
+                    <span th:if="${sortField == 'username' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'username' and sortDir == 'desc'}">↓</span>
+                </span>
+      </th>
+      <th class="sortable" onclick="sortTable(2)">
+        Email
+        <span id="sortIcon2" class="sort-icon">
+                    <span th:if="${sortField == 'email' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'email' and sortDir == 'desc'}">↓</span>
+                </span>
+      </th>
+      <th class="sortable" onclick="sortTable(3)">
+        Role
+        <span id="sortIcon3" class="sort-icon">
+                    <span th:if="${sortField == 'role' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'role' and sortDir == 'desc'}">↓</span>
+                </span>
+      </th>
+      <th class="sortable" onclick="sortTable(4)">
+        Created At
+        <span id="sortIcon4" class="sort-icon">
+                    <span th:if="${sortField == 'createdAt' and sortDir == 'asc'}">↑</span>
+                    <span th:if="${sortField == 'createdAt' and sortDir == 'desc'}">↓</span>
+                </span>
+      </th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.role.name}"></td>
+      <td th:text="${#temporals.format(user.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+      <td>
+        <a th:href="@{/admin/users/edit/{id}(id=${user.id})}"
+           class="btn btn-sm btn-primary">Редактировать</a>
+        <a th:href="@{/admin/users/delete/{id}(id=${user.id})}"
+           class="btn btn-sm btn-danger">Удалить</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="block">
+    <a href="/admin" class="btn btn-dark">Назад</a>
+    <a href="/" class="btn btn-secondary">На главную</a>
+  </div>
+
+</div>
+
+<script>
+  function sortTable(columnIndex) {
+    let sortField;
+    let currentSortDir = '[[${sortDir}]]';
+    let currentSortField = '[[${sortField}]]';
+
+    switch(columnIndex) {
+      case 0: sortField = 'id'; break;
+      case 1: sortField = 'username'; break;
+      case 2: sortField = 'email'; break;
+      case 3: sortField = 'role'; break;
+      case 4: sortField = 'createdAt'; break;
+      default: sortField = 'id';
+    }
+
+    let newSortDir = 'asc';
+    if (currentSortField === sortField) {
+      newSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+    }
+
+    window.location.href = `[[@{/admin/users}]]?sortField=${sortField}&sortDir=${newSortDir}`;
+  }
+</script>
+</body>
+</html>

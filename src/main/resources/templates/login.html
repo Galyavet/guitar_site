@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Вход | Guitar Guru</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .background-image {
+            flex: 1;
+            background-image: url('/img/banner_login.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.9);
+        }
+
+        .auth-container {
+            width: 500px;
+            height: 100vh;
+            padding: 2rem;
+            background-color: #fff;
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            height: 60px;
+        }
+
+        .btn-primary {
+            background-color: #212529;
+            border-color: #212529;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        a {
+            color: #333 !important;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+        }
+
+        a:hover {
+            color: #000 !important;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ced4da;
+        }
+
+        .alert {
+            border-radius: 8px;
+        }
+
+        @media (max-width: 992px) {
+            .background-image {
+                display: none;
+            }
+
+            .auth-container {
+                width: 100%;
+                box-shadow: none;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="background-image"></div>
+
+<div class="auth-container">
+    <div class="logo">
+        <a th:href="@{/}">
+            <img th:src="@{/img/logo1.png}" alt="Guitar Guru" src="https://via.placeholder.com/200x60?text=Guitar+Guru">
+        </a>
+    </div>
+
+    <h2 class="text-center mb-4">Вход в аккаунт</h2>
+
+    <form th:action="@{/login}" method="post">
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+        <div class="mb-3">
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="Email" required>
+        </div>
+
+        <div class="mb-3">
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="Пароль" required>
+            <div class="form-text text-end mt-2">
+                <a th:href="@{/forgot-password}">Забыли пароль?</a>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mb-3">
+            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger">
+            <i class="bi bi-exclamation-circle"></i> Неверный email или пароль
+        </div>
+
+        <div class="text-center mt-3">
+            Ещё нет аккаунта? <a th:href="@{/register}">Зарегистрируйтесь</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
