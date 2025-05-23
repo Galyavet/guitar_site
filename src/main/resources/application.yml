@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: guitar-site
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: galyavet548@gmail.com
+    password: hrzbwjzxbtmmhdas
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  session:
+    jdbc:
+      initialize-schema: always
+    timeout: 30m
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+server:
+  servlet:
+    session:
+      timeout: 30m
